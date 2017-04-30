@@ -1,4 +1,4 @@
-FROM rocker/r-ver:latest
+FROM ca3tech/r-ver:latest
 
 ARG RSTUDIO_VERSION
 ARG PANDOC_TEMPLATES_VERSION 
@@ -67,6 +67,27 @@ RUN apt-get update \
    && echo '#!/bin/bash \
            \n rstudio-server stop' \
            > /etc/services.d/rstudio/finish
+
+### ca3tech additions from here
+ARG R_VERSION
+ENV R_VERSION ${R_VERSION:-latest}
+
+# userconf.sh looks for an environment variable named PASSWORD to
+# associate with the rstudio user, which is the user under which
+# Rstudio will run. Allow this password to be specified at build time
+ARG RSTUDIO_PASSWORD
+RUN echo "PASSWORD=${RSTUDIO_PASSWORD:-rstudio}" >> /etc/environment
+
+# Add Linux libraries that may be needed by R packages
+RUN apt-get update \
+    && apt-get install -y libxml2-dev
+
+# Add some libraries to R that are useful for development but are
+# unlikely to be needed by applications themselves
+RUN . /etc/environment \
+    && [ "$R_VERSION" = "latest" ] && REPO="http://cran.rstudio.com/" || REPO=$MRAN \
+    &&  Rscript -e "install.packages(c('devtools', 'testthat'), repo = '$REPO')" 
+### to here
 
 COPY userconf.sh /etc/cont-init.d/conf
 EXPOSE 8787
