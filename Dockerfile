@@ -80,7 +80,7 @@ RUN echo "PASSWORD=${RSTUDIO_PASSWORD:-rstudio}" >> /etc/environment
 
 # Add Linux libraries that may be needed by R packages
 RUN apt-get update \
-    && apt-get install -y libxml2-dev
+    && apt-get install -y libxml2-dev \
     && apt-get install -y openssh-client
 
 # Add some libraries to R that are useful for development but are
