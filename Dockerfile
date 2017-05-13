@@ -68,7 +68,8 @@ RUN apt-get update \
            \n rstudio-server stop' \
            > /etc/services.d/rstudio/finish
 
-### ca3tech additions from here
+### The majority of this file is from rocker/rstudio
+### The following are additions for ca3tech
 ARG R_VERSION
 ENV R_VERSION ${R_VERSION:-3.3.2}
 
@@ -78,16 +79,7 @@ ENV R_VERSION ${R_VERSION:-3.3.2}
 ARG RSTUDIO_PASSWORD
 RUN echo "PASSWORD=${RSTUDIO_PASSWORD:-rstudio}" >> /etc/environment
 
-# Add Linux libraries that may be needed by R packages
-RUN apt-get update \
-    && apt-get install -y libxml2-dev
-
-# Add some libraries to R that are useful for development but are
-# unlikely to be needed by applications themselves
-RUN . /etc/environment \
-    && [ "$R_VERSION" = "latest" ] && REPO="http://cran.rstudio.com/" || REPO=$MRAN \
-    &&  Rscript -e "install.packages(c('devtools', 'testthat'), repo = '$REPO')" 
-### to here
+### End of ca3tech additions
 
 COPY userconf.sh /etc/cont-init.d/conf
 EXPOSE 8787
