@@ -1,4 +1,4 @@
-FROM ca3tech/r-ver:latest
+FROM ca3tech/r-ver:3.3.3
 
 ARG RSTUDIO_VERSION
 ARG PANDOC_TEMPLATES_VERSION 
@@ -71,7 +71,7 @@ RUN apt-get update \
 ### The majority of this file is from rocker/rstudio
 ### The following are additions for ca3tech
 ARG R_VERSION
-ENV R_VERSION ${R_VERSION:-latest}
+ENV R_VERSION ${R_VERSION:-3.3.3}
 
 # userconf.sh looks for an environment variable named PASSWORD to
 # associate with the rstudio user, which is the user under which
