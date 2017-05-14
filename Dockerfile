@@ -77,7 +77,10 @@ ENV R_VERSION ${R_VERSION:-3.1.2}
 # associate with the rstudio user, which is the user under which
 # Rstudio will run. Allow this password to be specified at build time
 ARG RSTUDIO_PASSWORD
-RUN echo "PASSWORD=${RSTUDIO_PASSWORD:-rstudio}" >> /etc/environment
+RUN echo "PASSWORD=${RSTUDIO_PASSWORD:-rstudio}" >> /etc/environment \
+    && adduser rstudio sudo \
+    && mkdir /home/rstudio/.ssh \
+    && chown rstudio:rstudio /home/rstudio/.ssh
 
 ### End of ca3tech additions
 
